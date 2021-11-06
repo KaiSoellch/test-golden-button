@@ -2,10 +2,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+import { GoldenButtonComponent } from './golden-button/golden-button.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    GoldenButtonComponent
   ],
   imports: [
     BrowserModule

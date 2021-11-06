@@ -14,13 +14,13 @@ import { Component } from '@angular/core';
     <h2>Here are some links to help you start: </h2>
     <ul>
       <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
+        <h2><app-golden-button target="_blank" href="https://angular.io/tutorial" text="Tour of Heroes"></app-golden-button></h2>
       </li>
       <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
+        <h2><app-golden-button class="md" target="_blank" href="https://angular.io/cli" text="CLI Documentation"></app-golden-button></h2>
       </li>
       <li>
-        <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
+        <h2><app-golden-button class="lg" target="_blank" href="https://blog.angular.io/" text="Angular blog"></app-golden-button></h2>
       </li>
     </ul>
     
