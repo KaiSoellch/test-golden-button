@@ -1,4 +1,4 @@
-import { Container, Loader, Renderer, Application, Sprite, Point } from 'pixi.js';
+import { Container, Loader, Application, Sprite, Point } from 'pixi.js';
 import { Layer, Stage } from '@pixi/layers';
 import { diffuseGroup, normalGroup, lightGroup, PointLight, Light, DirectionalLight, AmbientLight } from 'pixi-lights';
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
@@ -19,7 +19,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '
       position: relative;
     }
 
-    ::ng-deep canvas {
+    :host::ng-deep canvas {
       display: block;
       position: absolute;
       top: 0;

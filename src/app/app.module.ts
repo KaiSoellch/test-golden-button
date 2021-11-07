@@ -3,11 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { GoldenButtonComponent } from './golden-button/golden-button.component';
+import { MaskedBannerComponent } from './masked-banner/masked-banner.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    GoldenButtonComponent
+    GoldenButtonComponent,
+    MaskedBannerComponent
   ],
   imports: [
     BrowserModule
