@@ -1,8 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+@import url("https://use.typekit.net/evn0gbs.css");
+
 html, body {
   font-family: 'Asul', sans-serif;
 }
 
 body {
   padding-bottom: 7vh;
+}
+
+app-golden-button.umami a {
+  aspect-ratio: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  padding: 20px;
 }

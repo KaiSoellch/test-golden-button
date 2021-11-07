@@ -13,7 +13,7 @@ import { Container, Loader, Application, Sprite, Rectangle, LoaderResource, filt
       background: transparent;
       display: inline-block;
       padding: 14px 18px;
-      margin: 10px auto;
+      margin: 10px 10px;
       position: relative;
       text-decoration: none;
       font-weight: bold;
@@ -40,6 +40,12 @@ export class GoldenButtonComponent implements OnInit, AfterViewInit {
   @Input('text')
   public text: string = '';
 
+  @Input('texture')
+  public baseTexture: string = 'katie-harp-oZgj_nQQvuo-unsplash_600_dark.png';
+
+  @Input('highlight')
+  public highlightTexture: string = 'katie-harp-oZgj_nQQvuo-unsplash_600.jpeg';
+
   @ViewChild('button', { static: true })
   public button?: ElementRef<HTMLAnchorElement>;
 
@@ -59,31 +65,49 @@ export class GoldenButtonComponent implements OnInit, AfterViewInit {
     });
     this.button?.nativeElement.appendChild(this.app.view);
 
-    const lightLoader = new Loader();
-    lightLoader.baseUrl = 'assets/';
-    lightLoader
-        .add('highlight', 'katie-harp-oZgj_nQQvuo-unsplash_600.jpeg')
-        .add('bg', 'katie-harp-oZgj_nQQvuo-unsplash_600_dark.png')
-        .load((loader: any, res: any) => this.onAssetsLoaded(loader, res));
+    this.app.loader.baseUrl = 'assets/';
+    this.app.loader
+      .add(this.baseTexture)
+      .add(this.highlightTexture)
+      .load((loader: any, res: any) => this.onAssetsLoaded(loader, res));
   }
 
   onAssetsLoaded(loader: Loader, resources: Dict<LoaderResource>) {
     const wrap = new Container();
-    const bg = new Sprite(resources['bg'].texture);
+    const bg = new Sprite(resources[this.baseTexture].texture);
     wrap.addChild(bg);
-    const highlight = new Sprite(resources['highlight'].texture);
+    const highlight = new Sprite(resources[this.highlightTexture].texture);
     wrap.addChild(highlight);
 
-    const circle = new Graphics()
-        .beginFill(0xFF0000)
-        .drawRect(this.radius + this.blurSize, this.radius + this.blurSize, this.radius, this.radius)
-        .endFill();
-    circle.filters = [new filters.BlurFilter(this.blurSize)];
+    const widthRatio = this.app!.view.width / bg.width;
+    const heightRatio = this.app!.view.height / bg.height;
+    console.log(this.app!.view.width / bg.width);
+    console.log(this.app!.view.height / bg.height);
+    if(widthRatio > heightRatio) {
+      // photo is wider than background
+      bg.width *= widthRatio;
+      bg.height = this.app!.view.height;
+      highlight.width *= widthRatio;
+      highlight.height = this.app!.view.height;
+    } else {
+      // photo is taller than background
+      bg.width = this.app!.view.width;
+      bg.height *= heightRatio;
+      highlight.width = this.app!.view.width;
+      highlight.height *= heightRatio;
+    }
 
-    const bounds = new Rectangle(0, 0, (this.radius + this.blurSize) * 2, (this.radius + this.blurSize) * 2);
-    const texture = this.app!.renderer.generateTexture(circle, { scaleMode: SCALE_MODES.NEAREST, resolution: 1, region: bounds });
+    const rect = new Graphics()
+        .beginFill(0xFF00FF)
+        .drawRect(0, 0, this.radius, this.app!.view.height * 1.3)
+        .endFill();
+    rect.filters = [new filters.BlurFilter(this.blurSize, 10, 1, 5)];
+
+    const bounds = new Rectangle(-this.radius/2, -this.radius/2, (this.radius + this.blurSize) * 2, (this.radius + this.blurSize) * 2);
+    const texture = this.app!.renderer.generateTexture(rect, { scaleMode: SCALE_MODES.NEAREST, resolution: 1, region: bounds });
     this.focus = new Sprite(texture);
-    this.focus.position.y = -this.focus!.height / 3 * 2;
+    this.focus.position.y = -this.radius / 2;
+    this.focus.position.x = this.app!.view.width / 2 - this.radius * 1.6;
     this.focus.skew.set(0.4,0);
 
     wrap.addChild(this.focus);
@@ -99,7 +123,6 @@ export class GoldenButtonComponent implements OnInit, AfterViewInit {
 
   private onPointerMove(evt: any) {
     const pos: Point = evt.data.getLocalPosition(this.app!.stage.children[0]);
-    this.focus!.position.x = pos.x - this.focus!.width - 20;
-//    this.focus!.position.y = -this.focus!.height / 3 * 2;
+    this.focus!.position.x = pos.x - this.radius * 1.6;
   }
 }
