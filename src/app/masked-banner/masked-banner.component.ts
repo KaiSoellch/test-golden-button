@@ -4,7 +4,9 @@ import { Container, Loader, Application, Sprite, Rectangle, LoaderResource, filt
 
 @Component({
   selector: 'app-masked-banner',
-  template: `<canvas #canvas></canvas>`,
+  template: `
+    <canvas #canvas></canvas>
+  `,
   styles: [`
     :host {
       position: relative;
