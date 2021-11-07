@@ -73,7 +73,7 @@ export class MaskedBannerComponent implements OnInit, AfterViewInit {
     wrap.height = this.app!.screen.height;
 
     wrap.interactive = true;
-    wrap.on('mousemove', (evt) => this.onPointerMove(evt));
+    wrap.on('pointermove', (evt) => this.onPointerMove(evt));
 
     this.app!.stage.addChild(wrap);
   }
