@@ -14,6 +14,7 @@ import { Container, Loader, Application, Sprite, Rectangle, LoaderResource, filt
 
     :host::ng-deep canvas {
       width: 800px;
+      max-width: 100vw;
       aspect-ratio: 16 / 9;
     }
   `]
@@ -35,7 +36,6 @@ export class MaskedBannerComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
 
     this.app = new Application({
-      antialias: true,
       backgroundColor: 0xffffff,
       view: this.canvas!.nativeElement,
       width: this.el!.nativeElement.clientWidth,

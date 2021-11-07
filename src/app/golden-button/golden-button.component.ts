@@ -58,7 +58,6 @@ export class GoldenButtonComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.app = new Application({
-      antialias: true,
       backgroundColor: 0xffffff,
       width: this.button?.nativeElement.clientWidth,
       height: this.button?.nativeElement.clientHeight
