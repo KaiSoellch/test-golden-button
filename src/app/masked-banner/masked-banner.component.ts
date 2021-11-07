@@ -4,9 +4,7 @@ import { Container, Loader, Application, Sprite, Rectangle, LoaderResource, filt
 
 @Component({
   selector: 'app-masked-banner',
-  template: `
-    <canvas #canvas></canvas>
-  `,
+  template: `<canvas #canvas></canvas>`,
   styles: [`
     :host {
       position: relative;
@@ -38,6 +36,7 @@ export class MaskedBannerComponent implements OnInit, AfterViewInit {
 
     this.app = new Application({
       antialias: true,
+      backgroundColor: 0xffffff,
       view: this.canvas!.nativeElement,
       width: this.el!.nativeElement.clientWidth,
       height: this.el!.nativeElement.clientHeight
@@ -83,5 +82,4 @@ export class MaskedBannerComponent implements OnInit, AfterViewInit {
     this.focus!.position.x = pos.x - this.focus!.width / 2;
     this.focus!.position.y = pos.y - this.focus!.height / 2;
   }
-
 }

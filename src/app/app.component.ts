@@ -5,27 +5,18 @@ import { Component } from '@angular/core';
   template: `
     <!--The content below is only a placeholder and can be replaced.-->
     <div style="text-align:center" class="content">
-      <h1>
-        Welcome to {{title}}!
-      </h1>
+      <h2>Button Demo</h2>
+      <app-golden-button target="_self" href="#" text="In den Warenkorb"></app-golden-button>
+      <br>
+      <app-golden-button target="_self" href="#" text="Unsere Weihnachtsgeschenke"></app-golden-button>
+      <h2>Interactive Masked Banner</h2>
       <app-masked-banner></app-masked-banner>
+      <h2>Noised Banner (auto animated)</h2>
+      <app-noised-banner></app-noised-banner>
     </div>
-<!--
-    <ul>
-      <li>
-        <h2><app-golden-button target="_blank" href="https://angular.io/tutorial" text="Tour of Heroes"></app-golden-button></h2>
-      </li>
-      <li>
-        <h2><app-golden-button class="md" target="_blank" href="https://angular.io/cli" text="CLI Documentation"></app-golden-button></h2>
-      </li>
-      <li>
-        <h2><app-golden-button class="lg" target="_blank" href="https://blog.angular.io/" text="Angular blog"></app-golden-button></h2>
-      </li>
-    </ul>
--->
   `,
   styles: [`
-    ul { list-style: none; display: none; }
+    ul { list-style: none; }
   `]
 })
 export class AppComponent {

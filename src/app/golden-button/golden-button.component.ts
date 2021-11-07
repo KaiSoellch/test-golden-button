@@ -1,7 +1,6 @@
-import { Container, Loader, Application, Sprite, Point } from 'pixi.js';
-import { Layer, Stage } from '@pixi/layers';
-import { diffuseGroup, normalGroup, lightGroup, PointLight, Light, DirectionalLight, AmbientLight } from 'pixi-lights';
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Dict } from '@pixi/utils';
+import { Container, Loader, Application, Sprite, Rectangle, LoaderResource, filters, Graphics, SCALE_MODES, Point } from 'pixi.js';
 
 @Component({
   selector: 'app-golden-button',
@@ -12,11 +11,13 @@ import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '
   styles: [`
     a {
       background: transparent;
-      display: block;
-      width: 300px;
-      padding: 10px 15px;
-      margin: 0 auto;
+      display: inline-block;
+      padding: 14px 18px;
+      margin: 10px auto;
       position: relative;
+      text-decoration: none;
+      font-weight: bold;
+      color: #ffffff;
     }
 
     :host::ng-deep canvas {
@@ -42,61 +43,63 @@ export class GoldenButtonComponent implements OnInit, AfterViewInit {
   @ViewChild('button', { static: true })
   public button?: ElementRef<HTMLAnchorElement>;
 
+  private app?: Application;
+  private radius = 100;
+  private blurSize = 50;
+  private focus?: Sprite;
+
   constructor() { }
 
   ngAfterViewInit(): void {
-    const app = new Application({
+    this.app = new Application({
       antialias: true,
+      backgroundColor: 0xffffff,
       width: this.button?.nativeElement.clientWidth,
       height: this.button?.nativeElement.clientHeight
     });
-    this.button?.nativeElement.appendChild(app.view);
-
-    const stage = app.stage = new Stage();
-    const light = new PointLight(0xffffff, 500, 500);
-
-    // put all layers for deferred rendering of normals
-    stage.addChild(new Layer(diffuseGroup));
-    stage.addChild(new Layer(normalGroup));
-    stage.addChild(new Layer(lightGroup));
+    this.button?.nativeElement.appendChild(this.app.view);
 
     const lightLoader = new Loader();
     lightLoader.baseUrl = 'assets/';
     lightLoader
-        .add('bg_diffuse', 'schvfgwp_4K_Albedo.jpeg')
-        .add('bg_normal', '30_W_GLOSSY_SWIPES_Normal.jpeg')
-        .load((loader: any, res: any) => this.onAssetsLoaded(loader, res, light, stage));
+        .add('highlight', 'katie-harp-oZgj_nQQvuo-unsplash_600.jpeg')
+        .add('bg', 'katie-harp-oZgj_nQQvuo-unsplash_600_dark.png')
+        .load((loader: any, res: any) => this.onAssetsLoaded(loader, res));
   }
 
-  onAssetsLoaded(loader: Loader, res: any, light: Light, stage: Stage) {
-    const bg = this.createPair(res.bg_diffuse.texture, res.bg_normal.texture);
+  onAssetsLoaded(loader: Loader, resources: Dict<LoaderResource>) {
+    const wrap = new Container();
+    const bg = new Sprite(resources['bg'].texture);
+    wrap.addChild(bg);
+    const highlight = new Sprite(resources['highlight'].texture);
+    wrap.addChild(highlight);
 
-    light.position.set(100, 160);
-    stage.addChild(bg);
+    const circle = new Graphics()
+        .beginFill(0xFF0000)
+        .drawRect(this.radius + this.blurSize, this.radius + this.blurSize, this.radius, this.radius)
+        .endFill();
+    circle.filters = [new filters.BlurFilter(this.blurSize)];
 
-    stage.addChild(new AmbientLight(0x4d4d59, 2));
-    stage.addChild(new DirectionalLight(0x4d4d59, 1, new Point(50, 50)));
-    stage.addChild(light);
+    const bounds = new Rectangle(0, 0, (this.radius + this.blurSize) * 2, (this.radius + this.blurSize) * 2);
+    const texture = this.app!.renderer.generateTexture(circle, { scaleMode: SCALE_MODES.NEAREST, resolution: 1, region: bounds });
+    this.focus = new Sprite(texture);
+    this.focus.position.y = -this.focus!.height / 3 * 2;
+    this.focus.skew.set(0.4,0);
 
-    bg.interactive = true;
-    bg.on('mousemove', (event) => {
-        light.position.copyFrom(event.data.global);
-    });
-  }
+    wrap.addChild(this.focus);
+    highlight.mask = this.focus;
 
-  createPair(diffuseTex: any, normalTex: any) {
-    const container = new Container();
-    const diffuseSprite = new Sprite(diffuseTex);
-    diffuseSprite.parentGroup = diffuseGroup;
-    const normalSprite = new Sprite(normalTex);
-    normalSprite.parentGroup = normalGroup;
-    container.addChild(diffuseSprite);
-    container.addChild(normalSprite);
-    container.width = this.button?.nativeElement.clientWidth!;
-    container.height = this.button?.nativeElement.clientHeight!;
-    return container;
+    wrap.interactive = true;
+    wrap.on('pointermove', (evt) => this.onPointerMove(evt));
+
+    this.app!.stage.addChild(wrap);
   }
 
   ngOnInit(): void {}
 
+  private onPointerMove(evt: any) {
+    const pos: Point = evt.data.getLocalPosition(this.app!.stage.children[0]);
+    this.focus!.position.x = pos.x - this.focus!.width - 20;
+//    this.focus!.position.y = -this.focus!.height / 3 * 2;
+  }
 }
