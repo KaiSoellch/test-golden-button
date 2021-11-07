@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
       </h1>
       <app-masked-banner></app-masked-banner>
     </div>
+<!--
     <ul>
       <li>
         <h2><app-golden-button target="_blank" href="https://angular.io/tutorial" text="Tour of Heroes"></app-golden-button></h2>
@@ -21,6 +22,7 @@ import { Component } from '@angular/core';
         <h2><app-golden-button class="lg" target="_blank" href="https://blog.angular.io/" text="Angular blog"></app-golden-button></h2>
       </li>
     </ul>
+-->
   `,
   styles: [`
     ul { list-style: none; display: none; }
